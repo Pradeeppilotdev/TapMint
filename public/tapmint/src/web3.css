@@ -1,0 +1,44 @@
+.token-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0.75rem 0 0;
+  padding: 0.55rem 0.7rem;
+  border-radius: 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--accent, #6E54FF) 35%, transparent);
+  background: color-mix(in srgb, var(--accent, #6E54FF) 12%, transparent);
+  font-size: 0.78rem;
+}
+
+.token-badge img {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.token-badge strong {
+  display: block;
+  font-size: 0.82rem;
+}
+
+.token-badge span {
+  opacity: 0.72;
+  font-family: ui-monospace, monospace;
+  font-size: 0.68rem;
+}
+
+.token-badge a {
+  margin-left: auto;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  opacity: 0.85;
+}
+
+#wallet-chip {
+  display: block;
+  margin-top: 0.45rem;
+  font-family: ui-monospace, monospace;
+  word-break: break-all;
+}

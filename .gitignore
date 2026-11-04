@@ -1,5 +1,3 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
 /.pnp
@@ -22,7 +20,9 @@
 
 # misc
 .DS_Store
+Thumbs.db
 *.pem
+*.log
 
 # debug
 npm-debug.log*
@@ -30,12 +30,27 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# env / secrets (keep examples)
+.env
+.env.*
+!.env.example
+!.env.local.example
 
-# vercel
+# local runtime state
+/data/points.json
+/data/points-log.jsonl
+
+# duplicate / upstream clones (served copy lives in public/tapmint)
+/tapmint/
+/temp-tapmint/
+/public/tapmint-src/
+
+# vercel / typescript
 .vercel
-
-# typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp

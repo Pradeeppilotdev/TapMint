@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TapMint (Devcon)
 
-## Getting Started
+Privy-gated vertical game feed + nad.fun meme markets on **Monad testnet**.
 
-First, run the development server:
+## Run
 
 ```bash
+npm install
+npm run sync-markets   # copies data/markets.json → public/tapmint/
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 — **email login required**, then TapMint loads. No guest play.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Layout
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Path | Role |
+| --- | --- |
+| `/` | Privy gate → TapMint feed (main) |
+| `/markets` | Buy + claim rewards |
+| `/tapmint/` | Static TapMint (iframe, wallet-injected) |
+| `tapmint/` | Upstream source clone (reference) |
+| `data/markets.json` | Created token addresses |
 
-## Learn More
+## Commands
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run generate-logos
+npm run create-markets   # testnet only — needs PRIVATE_KEY + MON
+npm run sync-markets
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Docs
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [docs/mvp-plan.md](./docs/mvp-plan.md)
+- [docs/nad-fun-research.md](./docs/nad-fun-research.md)
+- [docs/token-holdings.md](./docs/token-holdings.md)
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Upstream games: [Pradeeppilotdev/TapMint](https://github.com/Pradeeppilotdev/TapMint)

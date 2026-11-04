@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#6E54FF">
+  <meta name="description" content="TapMint — Privy-gated instant games with nad.fun meme tokens on Monad testnet.">
+  <title>TapMint — One more game.</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%230E091C'/%3E%3Cpath d='m15 11 14 9-14 9z' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <script>
+    (()=>{let saved;try{saved=JSON.parse(localStorage.getItem('tapmint:theme'));}catch{}const dark=saved==='dark'||(saved!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=dark?'dark':'light';document.querySelector('meta[name="theme-color"]').content=dark?'#100D18':'#FFFFFF';})();
+  </script>
+  <link rel="stylesheet" href="/tapmint/src/styles.css">
+  <link rel="stylesheet" href="/tapmint/src/web3.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="?game=flap" aria-label="TapMint home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 17 17"><path d="M4 2.125 13.917 8.5 4 14.875Z"/></svg></span>tapmint</a>
+    <div class="sidebar-label">ONE MORE GAME.</div>
+    <nav aria-label="Main navigation">
+      <button class="nav-item selected" id="nav-play">Play feed</button>
+      <button class="nav-item" id="nav-saved">Saved games <small id="saved-count">0</small></button>
+      <button class="nav-item" id="nav-best">Personal bests</button>
+    </nav>
+    <div class="sidebar-note"><strong>Wallet required.</strong><p>Rewards need a Privy wallet.</p><small id="wallet-chip">Connecting…</small></div>
+  </aside>
+  <main>
+    <header class="topbar"><div class="desktop-heading"><span class="eyebrow">PLAY / DISCOVER · TESTNET</span><h1>One more game.</h1></div><a class="brand mobile-brand" href="?game=flap" aria-label="TapMint home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 17 17"><path d="M4 2.125 13.917 8.5 4 14.875Z"/></svg></span><span>tapmint<small class="brand-slogan">One more game.</small></span></a><div class="top-controls"><button class="theme-toggle" id="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.6 13A9 9 0 0 1 11 3.4 9 9 0 1 0 20.6 13Z"/></svg><span>Dark</span></button><button class="icon-button" id="help" aria-label="Help and sharing">?</button></div></header>
+    <div class="workspace">
+      <section class="feed-column" aria-label="Game feed">
+        <div class="feed-tabs"><div role="group" aria-label="Feed filter"><button class="tab active" id="for-you">For you</button><button class="tab" id="saved">Saved</button></div><span class="feed-count">01 <span>/ 04</span></span></div>
+        <div class="feed-wrap"><div id="feed" tabindex="0" aria-label="Game feed. Swipe to change games; use a long swipe while playing."></div><div class="feed-arrows"><button class="icon-button" id="previous" aria-label="Previous game">↑</button><button class="icon-button" id="next" aria-label="Next game">↓</button></div></div>
+        <p class="scroll-hint"><span>↕</span> Scroll to discover <span class="hint-dot">·</span> <kbd>J</kbd> <kbd>K</kbd> to switch games</p>
+      </section>
+      <aside class="discovery" aria-label="Game collection"><div class="collection-heading"><span class="eyebrow">THE STARTER PACK</span><h2>Find your next<br>favourite.</h2></div><div id="game-list"></div><div class="how-card"><span class="tiny-pill">PRIVY · NAD.FUN · MONAD TESTNET</span><p>Play to earn points.<br>Claim meme tokens from the treasury.</p></div><footer><a href="/markets" target="_parent">Reward tokens ↗</a><span>TapMint · auto treasury payouts</span></footer></aside>
+    </div>
+  </main>
+  <dialog id="modal"><div class="dialog-heading"><h2 id="modal-title"></h2><button class="icon-button" id="close-modal" aria-label="Close dialog">×</button></div><div id="modal-body"></div></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="/tapmint/src/app.js"></script>
+</body>
+</html>

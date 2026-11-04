@@ -1,0 +1,54 @@
+[
+  {
+    "gameId": "flap",
+    "name": "FlapCoin",
+    "symbol": "FLAP",
+    "tokenAddress": "0x1f4dE17ebADFcfFB17FF45F92A6dB4f6C1227777",
+    "poolAddress": "0xFA3965C9A5759233B5Eac30f6D2B02E288245B30",
+    "transactionHash": "0x6d1fc732954a15ee0371487d3a1aacf09060d3733b00bd550f17e9adc62e1c6d",
+    "imageUri": "https://storage.nadapp.net/coin/9c7923be-cb4f-40f3-aa7e-48771c93b922",
+    "metadataUri": "https://storage.nadapp.net/metadata/418f0c80-0094-4408-8d0e-b08ad2f9133c.json",
+    "initialBuyMon": "2",
+    "network": "testnet",
+    "createdAt": "2026-11-04T10:48:52.787Z"
+  },
+  {
+    "gameId": "mole",
+    "name": "MoleCoin",
+    "symbol": "MOLE",
+    "tokenAddress": "0xb495641b273f31d58459b0893ec8853Be3477777",
+    "poolAddress": "0x8aE09A149c517CA4F59e9CF3883979c43440474E",
+    "transactionHash": "0x0daac2f6b475807203db50b879efb26cede4dfde26303639b0d90214cb018e5c",
+    "imageUri": "https://storage.nadapp.net/coin/0d57ebf3-33dc-4fea-987f-c62d5c0d29b3",
+    "metadataUri": "https://storage.nadapp.net/metadata/3ec07eb1-0f1b-4cd8-bd45-eaec6039b509.json",
+    "initialBuyMon": "2",
+    "network": "testnet",
+    "createdAt": "2026-11-04T10:48:55.585Z"
+  },
+  {
+    "gameId": "snake",
+    "name": "SnekCoin",
+    "symbol": "SNEK",
+    "tokenAddress": "0xB74488eaab6Be4013e33993c838f829d0B867777",
+    "poolAddress": "0x4346Af10a32f4Bd07f223E7eBcF243429C9CB21A",
+    "transactionHash": "0x26dce147bb410ef0d01b37e07129ac47624b863fd0bf574e8c40156b946ca2c9",
+    "imageUri": "https://storage.nadapp.net/coin/2fa50087-64e6-47b1-9d11-9c8bb21b85cd",
+    "metadataUri": "https://storage.nadapp.net/metadata/719bfdfc-3aec-4a83-b4dd-e15c16d0ad28.json",
+    "initialBuyMon": "3",
+    "network": "testnet",
+    "createdAt": "2026-11-04T10:49:03.713Z"
+  },
+  {
+    "gameId": "memory",
+    "name": "MemoCoin",
+    "symbol": "MEMO",
+    "tokenAddress": "0xC7980cFb51502a005C7024E72DB7f254206f7777",
+    "poolAddress": "0x37Fc3f5e7Bc049149015Bb686101198dc61Cc074",
+    "transactionHash": "0x8063efd4f6b7899dea5ae08a079d425d1d7d74581e2da56280eed7b637418dfe",
+    "imageUri": "https://storage.nadapp.net/coin/61b123a8-b090-4121-842d-544ecb24f01c",
+    "metadataUri": "https://storage.nadapp.net/metadata/cbd46ec6-d90c-433d-a496-27aa88497aeb.json",
+    "initialBuyMon": "2",
+    "network": "testnet",
+    "createdAt": "2026-11-04T10:49:12.265Z"
+  }
+]

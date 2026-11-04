@@ -1,0 +1,29 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="366" height="401.2" viewBox="0 0 366 401.2" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Editable arcade scenery" clip-path="url(#clip0_0_39)">
+<rect width="366" height="401.2" fill="#DDD7FE"/>
+<circle id="Ellipse" cx="259.78" cy="72.5" r="47.5" fill="white"/>
+<circle id="Ellipse_2" cx="241.9" cy="44" r="4" fill="#85E6FF"/>
+<path id="Polygon" opacity="0.18" d="M40 241.2L109.282 361.2H-29.282L40 241.2Z" fill="#6E54FF"/>
+<path id="Polygon_2" opacity="0.27" d="M140 241.2L209.282 370.2H70.718L140 241.2Z" fill="#A190FF"/>
+<path id="Polygon_3" opacity="0.36" d="M240 241.2L309.282 379.2H170.718L240 241.2Z" fill="#6E54FF"/>
+<path id="Polygon_4" opacity="0.45" d="M340 241.2L409.282 388.2H270.718L340 241.2Z" fill="#A190FF"/>
+<rect id="Rectangle" x="281.82" y="130" width="44" height="271.2" rx="8" fill="#6E54FF"/>
+<rect id="Rectangle_2" x="274.5" y="124" width="60" height="14" rx="5" fill="#A190FF"/>
+<g id="Pocket Flap mascot">
+<g clip-path="url(#clip1_0_39)">
+<rect x="117.12" y="95" width="80" height="64" rx="24" fill="white"/>
+<rect id="Rectangle_3" x="112.12" y="121" width="38" height="26" rx="12" fill="#6E54FF"/>
+<rect id="Rectangle_4" x="169.12" y="108" width="9" height="14" rx="4" fill="#0E091C"/>
+<path id="Polygon_5" d="M195.12 131L180.12 140.526V121.474L195.12 131Z" fill="#FFAE45"/>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_0_39">
+<rect width="366" height="401.2" fill="white"/>
+</clipPath>
+<clipPath id="clip1_0_39">
+<rect x="117.12" y="95" width="80" height="64" rx="24" fill="white"/>
+</clipPath>
+</defs>
+</svg>
