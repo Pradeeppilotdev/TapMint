@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#6E54FF">
+  <meta name="description" content="Little games. Big one-more-go energy. Play four instant arcade games in TapMint’s swipeable feed.">
+  <title>TapMint — One more game.</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%230E091C'/%3E%3Cpath d='m15 11 14 9-14 9z' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/src/styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="?game=flap" aria-label="TapMint home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 17 17"><path d="M4 2.125 13.917 8.5 4 14.875Z"/></svg></span>tapmint</a>
+    <div class="sidebar-label">ONE MORE GAME.</div>
+    <nav aria-label="Main navigation">
+      <button class="nav-item selected" id="nav-play">Play feed</button>
+      <button class="nav-item" id="nav-saved">Saved games <small id="saved-count">0</small></button>
+      <button class="nav-item" id="nav-best">Personal bests</button>
+    </nav>
+    <div class="sidebar-note"><strong>15 seconds.</strong><p>Zero commitments.</p><small>Your next favourite<br>is one swipe away.</small></div>
+  </aside>
+  <main>
+    <header class="topbar"><div class="desktop-heading"><span class="eyebrow">PLAY / DISCOVER</span><h1>One more game.</h1></div><a class="brand mobile-brand" href="?game=flap" aria-label="TapMint home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 17 17"><path d="M4 2.125 13.917 8.5 4 14.875Z"/></svg></span><span>tapmint<small class="brand-slogan">One more game.</small></span></a><button class="icon-button" id="help" aria-label="Help and sharing">?</button></header>
+    <div class="workspace">
+      <section class="feed-column" aria-label="Game feed">
+        <div class="feed-tabs"><div role="group" aria-label="Feed filter"><button class="tab active" id="for-you">For you</button><button class="tab" id="saved">Saved</button></div><span class="feed-count">01 <span>/ 04</span></span></div>
+        <div class="feed-wrap"><div id="feed" tabindex="0" aria-label="Game feed. Swipe to change games; pause first while playing."></div><div class="feed-arrows"><button class="icon-button" id="previous" aria-label="Previous game">↑</button><button class="icon-button" id="next" aria-label="Next game">↓</button></div></div>
+        <p class="scroll-hint"><span>↕</span> Scroll to discover <span class="hint-dot">·</span> <kbd>J</kbd> <kbd>K</kbd> to switch games</p>
+      </section>
+      <aside class="discovery" aria-label="Game collection"><div class="collection-heading"><span class="eyebrow">THE STARTER PACK</span><h2>Find your next<br>favourite.</h2></div><div id="game-list"></div><div class="how-card"><span class="tiny-pill">ALL PLAY. NO MIS-SWIPES.</span><p>The feed locks while you play.<br>Pause whenever you want to explore.</p></div><footer><a href="https://github.com/opengames-dev/opengames-dev.github.io" target="_blank" rel="noreferrer">Built with OpenGames ↗</a><span>TapMint · Web2 preview</span></footer></aside>
+    </div>
+  </main>
+  <dialog id="modal"><div class="dialog-heading"><h2 id="modal-title"></h2><button class="icon-button" id="close-modal" aria-label="Close dialog">×</button></div><div id="modal-body"></div></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="/src/app.js"></script>
+</body>
+</html>
