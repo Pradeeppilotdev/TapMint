@@ -3,7 +3,7 @@ await rm('dist', { recursive: true, force: true });
 await mkdir('dist', { recursive: true });
 for (const path of ['index.html', 'src', 'licenses']) await cp(path, `dist/${path}`, { recursive: true });
 // A small dependency-free bundle also supports opening dist/index.html directly.
-const sources = ['src/games/flap.js', 'src/games/snake.js', 'src/games/quick-games.js', 'src/storage.js', 'src/art.js', 'src/feed.js', 'src/audio.js', 'src/input.js', 'src/timing.js', 'src/app.js'];
+const sources = ['src/games/flap.js', 'src/games/snake.js', 'src/games/quick-games.js', 'src/storage.js', 'src/layout.js', 'src/art.js', 'src/feed.js', 'src/audio.js', 'src/input.js', 'src/timing.js', 'src/theme.js', 'src/app.js'];
 let bundle = '';
 for (const source of sources) {
   let text = await readFile(source, 'utf8');

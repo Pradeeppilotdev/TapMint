@@ -18,10 +18,14 @@ test('small wheel noise and horizontal or short touch movements do not advance',
   assert.equal(swipeDirection(2, -90, 400, 700), 1);
   assert.equal(swipeDirection(2, 40, 60, 700), -1);
 });
-test('running-game lock blocks wheel and all direct navigation', () => {
+test('running-game guard blocks short wheels and direct navigation but accepts a long scroll', () => {
   const feed = new FeedNavigation(); feed.reset(4, 1); feed.setLocked(true);
   assert.equal(feed.move(1, 100), false); assert.equal(feed.move(-1, 200), false);
-  assert.equal(feed.wheel(500, 300), false); assert.equal(feed.index, 1);
+  assert.equal(feed.wheel(100, 300), false); assert.equal(feed.index, 1);
+  assert.equal(feed.wheel(100, 350), false); assert.equal(feed.wheel(130, 400), true); assert.equal(feed.index, 2);
+  feed.setLocked(false);
+  for(let now=450;now<1600;now+=50)assert.equal(feed.wheel(80,now),false);
+  assert.equal(feed.index,2);
 });
 test('unlocking does not let residual momentum skip a game; a new gesture works', () => {
   const feed = new FeedNavigation(); feed.reset(4, 1); feed.setLocked(true);
@@ -35,4 +39,15 @@ test('feed stops at both boundaries and blocks rapid repeated navigation', () =>
   assert.equal(feed.move(1, 100), false); assert.equal(feed.move(2, 500), true);
   assert.equal(feed.move(1, 900), false); assert.equal(feed.index, 3);
   feed.reset(0); assert.equal(feed.move(1, 2000), false);
+});
+
+test('active games require distance, never a fast accidental flick, in either direction',()=>{
+  assert.equal(swipeDirection(2,-80,40,700,true),0);
+  assert.equal(swipeDirection(2,100,500,700,true),0);
+  assert.equal(swipeDirection(2,-230,500,700,true),1);
+  assert.equal(swipeDirection(2,230,500,700,true),-1);
+  assert.equal(swipeDirection(250,230,500,700,true),0);
+  assert.equal(swipeDirection(2,-145,500,350,true),1);
+  const feed=new FeedNavigation();feed.reset(4,1);feed.setLocked(true);
+  assert.equal(feed.move(1,0,true),true);assert.equal(feed.move(1,100,true),false);
 });

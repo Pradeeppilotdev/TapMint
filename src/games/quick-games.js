@@ -5,17 +5,17 @@ export function createMole(random = Math.random) {
 }
 export function stepMole(state, dt) {
   state.elapsed += dt;
-  if (state.active >= 0 && state.elapsed >= state.expires) { state.active = -1; state.nextSpawn = state.elapsed + .22; }
+  if (state.active >= 0 && state.elapsed >= state.expires) { state.active = -1; state.nextSpawn = state.elapsed + .10; }
   if (state.active === -1 && state.elapsed >= state.nextSpawn) {
     const choices = Array.from({ length: 9 }, (_, i) => i).filter(i => i !== state.previous);
     state.active = choices[Math.floor(state.random() * choices.length)];
     state.previous = state.active;
-    state.expires = state.elapsed + 1.15 - Math.min(state.elapsed / 15, 1) * .26;
+    state.expires = state.elapsed + .75 - Math.min(state.elapsed / 60, 1) * .35;
   }
 }
 export function hitMole(state, index) {
   if (index !== state.active || state.active < 0 || state.elapsed >= state.expires) return false;
-  state.score++; state.active = -1; state.nextSpawn = state.elapsed + .3; return true;
+  state.score++; state.active = -1; state.nextSpawn = state.elapsed + .08; return true;
 }
 export function createMemory(random = Math.random) {
   const deck = Array.from({ length: 12 }, (_, i) => i % 6);

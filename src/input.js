@@ -20,3 +20,8 @@ export class TapIntent {
   cancel(id) { this.pointers.delete(id); this.gesture = null; this.valid = false; }
   consume() { const valid = this.valid; this.valid = false; return valid; }
 }
+
+// Game-area taps and repeated gameplay keys never dismiss a finished result.
+export function playAreaAction(mode) {
+  return mode === 'ready' ? 'start' : mode === 'paused' ? 'resume' : mode === 'running' ? 'input' : null;
+}

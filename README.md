@@ -25,18 +25,18 @@ The build produces `dist/index.html`, a self-contained HTML/JS/CSS bundle that c
 
 | Game | Controls | Round |
 | --- | --- | --- |
-| Pocket Flap | Tap the scene / Space | 15 seconds or collision |
-| Mole Patrol | Tap a mole / keys 1–9 | 15 seconds |
-| Mint Condition | Arrow keys / on-screen direction pad | 30 seconds or collision |
-| Double Take | Tap cards / Tab and Enter | 30 seconds or six matched pairs |
+| Pocket Flap | Tap the scene / Space | Until collision |
+| Mole Patrol | Tap a mole / keys 1–9 | 30 seconds, 60 seconds, or endless |
+| Mint Condition | Arrow keys / on-screen direction pad | Until collision |
+| Double Take | Tap cards / Tab and Enter | Until six matched pairs; no time limit |
 
 The white and Monad purple (`#6E54FF`) interface uses a fixed viewport and vertically animated cards. A deliberate swipe or wheel gesture moves exactly one game; trackpad momentum cannot skip through the collection. J/K, Page Up/Down, and navigation arrows also switch games. Reduced-motion settings disable the slide animation.
 
-While a round is running, feed gestures, game navigation, and feed filters are locked. Tap Pause (or press P) to browse again, or finish the round. Returning to a paused game preserves progress. Tap its play area or Resume to continue. R restarts. Snake steering uses arrow keys or its on-screen direction pad. Switching browser tabs or opening a dialog pauses the current round. The hint below the feed indicates whether navigation is locked.
+While a round is running, short swipes and small scrolls are ignored. A long vertical swipe (roughly one third of the card, capped at 220 px) or a longer wheel gesture switches exactly one game and pauses the current round. A quick flick alone cannot bypass this protection. Navigation buttons and filters remain locked until you tap Pause (or press P) or finish the round. Returning to a paused game preserves progress. Tap its play area or Resume to continue. R restarts. Snake steering uses arrow keys or its on-screen direction pad. Switching browser tabs or opening a dialog pauses the current round. The hint below the feed explains the long-swipe gesture during play.
 
-Saved games, high scores, sound preferences, and counts of starts/completions/retries use `tapmint:` localStorage keys, with in-memory fallback when blocked. They are device-local, unauthenticated, and not suitable as trusted scores or token-reward inputs. Switching feed filters recreates game sessions. No analytics are transmitted.
+Saved games, high scores, Mole round length, sound preferences, and counts of starts/completions/retries use `tapmint:` localStorage keys, with in-memory fallback when blocked. They are device-local, unauthenticated, and not suitable as trusted scores or token-reward inputs. Switching feed filters recreates game sessions. No analytics are transmitted.
 
-Direct links use `?game=flap`, `?game=mole`, `?game=snake`, or `?game=memory`. Unknown game IDs fall back to the first game. Scores are specific to each game and are not compared across games.
+Direct links use `?game=flap`, `?game=mole`, `?game=snake`, or `?game=memory`. Unknown game IDs fall back to the first game. Scores are specific to each game and are not compared across games. Mole Patrol keeps separate best scores for 30-second, 60-second, and endless rounds; earlier 15-second scores stay stored but are not mixed into the new modes. Moles initially stay up for 0.75 seconds, speeding up to 0.4 seconds over a minute, with an 80 ms gap after a hit. The custom three-button round picker exposes all modes directly, with a visible selected state. It stays in place and is disabled during a round. Results and replay use the same playfield dimensions, so the board does not resize when restarting. Endless Mole rounds have an explicit Finish button.
 
 ## Design
 
@@ -46,15 +46,23 @@ Inter is used as the heading fallback because Britti Sans was unavailable in the
 
 The earlier Pocket Flap SVG exports remain in `src/assets/`. The current expanded playfield uses responsive canvas scenery so the bird, pipes, and Snake cells retain their proportions. The compact information panel leaves most of the card available for play. Navigation arrows, sound controls, score units, and sharing through the help menu are retained. The Figma file documents the preceding visual direction; the live implementation includes the newer touch-to-play layout.
 
+## Themes and responsive rendering
+
+Use the Light/Dark switch in the header. The first visit follows the device theme; an explicit choice is saved in this browser and applied before the next page paint. The theme covers menus, dialogs, controls, and game scenery. Switching during play redraws the scene without resetting the round.
+
+Pocket Flap uses one scale for both physics axes and the bird, with the arena fitted inside the available playfield. Extra space shows scenery rather than stretching the game. Memory cards remain square and mole targets remain circular at both ready and active sizes. Snake cells remain square, with space reserved for the actual on-screen direction controls.
+
 ## Touch and sound
 
-A deliberate tap anywhere in the play area starts a round. The same tap reveals the selected memory card or hits the visible first mole. A drag, swipe, long press, cancelled touch, or multi-touch gesture does not start play. Keyboard-accessible Play, Pause, Resume, and Retry controls remain available.
+A deliberate tap anywhere in the play area starts a round. The same tap reveals the selected memory card or hits the visible first mole. A drag, swipe, long press, cancelled touch, or multi-touch gesture does not start play. After a round ends, game-area taps and the gameplay Space key leave the result visible. Choose **Play again** beneath **Round complete** in the game area to restart (or use the explicit R shortcut). Keyboard-accessible Play, Pause, Resume, and Play again controls remain available.
 
 Sound is muted by default, with a visible **Sound off** control before play. Enabling it resumes Web Audio inside the user gesture and plays a confirmation tone once ready. The saved choice is respected; starting/resuming a round unlocks audio again when needed. Interrupted audio drops stale effects, mute stops current tones, and errors expose a retry action. Check the phone's media volume and output route if the browser says Sound on but cannot be heard.
 
 ## Structure
 
 - `src/app.js`: feed, round lifecycle, controls, sharing, local stats.
+- `src/layout.js`: aspect-preserving arena and grid geometry.
+- `src/theme.js`: persistent light/dark theme and system preference.
 - `src/input.js`: tap intent, movement tolerance, long-press and multi-touch rejection.
 - `src/audio.js`: gesture-unlocked audio, mute, interruption recovery, and effect playback.
 - `src/feed.js`: card transitions, gesture thresholds, momentum handling, and gameplay navigation lock.
@@ -72,4 +80,4 @@ Creator customization and a memecoin publishing flow can build on the game catal
 
 ## Verification
 
-Twenty-three automated checks cover all four game engines, storage fallback, feed navigation/locking, tap intent, multi-touch rejection, audio resume ordering, mute races, unavailable audio, and interruption recovery, and nonnegative frame timing after a restart. Browser checks cover first-tap play for all four games, the first memory reveal and mole score, blocked navigation while playing, preserved paused progress, and the labelled sound control reaching an active audio context. Layouts are checked at 390 × 844, 320 × 568, and 1440 × 960, with no horizontal overflow or browser console errors. Saved-game filtering and tap-to-retry were also checked. Physical-device touch behaviour and audible speaker output still require device testing.
+Thirty-one automated checks cover the four game engines, local storage, guarded long-swipe navigation and wheel momentum, tap intent, completed-round input protection, timed/endless clocks, faster Mole pacing, audio resume/mute recovery, frame timing, canvas proportions, square grids, and theme resolution. Browser checks also cover a short swipe staying in an active round, a long swipe switching and preserving paused progress, Mole round selection and manual completion, and repeated taps leaving results visible. Phone layouts are checked at 390 × 844 and 320 × 568. Physical-device touch behaviour and audible speaker output still require device testing.

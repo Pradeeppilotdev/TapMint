@@ -41,3 +41,63 @@ main{margin-left:216px;padding:40px;height:100dvh;display:flex;flex-direction:co
 /* Draw responsive scenery on canvas so characters keep their proportions. */
 .game-section[data-id=flap]:not(.is-started) canvas{opacity:1}
 .game-section[data-id=flap]:not(.is-started) .game-visual:after{display:none}
+
+/* The theme switch stays outside the playfield and never changes round state. */
+.top-controls{display:flex;align-items:center;gap:6px}.top-controls .icon-button{background:transparent}
+.theme-toggle{display:flex;align-items:center;justify-content:center;gap:7px;height:40px;padding:0 12px;border-radius:20px;background:var(--white);border:1px solid var(--line);font:10px var(--mono);color:var(--ink)}
+.theme-toggle svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round}
+:root[data-theme=dark]{color-scheme:dark;--ink:#F5F1FF;--white:#1B1629;--soft:#100D18;--lavender:#29223E;--muted:#B0A5C4;--line:#3B3150;--accent:#B9AAFF;background:#100D18}
+[data-theme=dark] body,[data-theme=dark] main{background:var(--soft)}
+[data-theme=dark] .brand-mark{background:#6E54FF;color:#FFF}
+[data-theme=dark] .game-section,[data-theme=dark] #feed{background:#211A33}
+[data-theme=dark] .game-content,[data-theme=dark] .is-playing .game-content,[data-theme=dark] dialog{background:var(--white)}
+[data-theme=dark] .play-button,[data-theme=dark] .empty-state button,[data-theme=dark] .dialog-action,[data-theme=dark] .game-thumbnail{color:#FFF}
+[data-theme=dark] .game-list-item:nth-child(even) .game-thumbnail{color:#100D18}
+[data-theme=dark] .tab.active,[data-theme=dark] .eyebrow,[data-theme=dark] .nav-item.selected,[data-theme=dark] .scroll-hint.locked,[data-theme=dark] .save-button[aria-pressed=true]{color:var(--accent)}
+[data-theme=dark] .how-card{background:#29223E;color:#F5F1FF;border:1px solid var(--line)}
+[data-theme=dark] .tiny-pill{color:#D8CFFF}
+[data-theme=dark] .sound-button,[data-theme=dark] .hud-time{background:#352B4A;color:#F5F1FF}
+[data-theme=dark] .sound-button[aria-pressed=true]{background:#6E54FF;color:#FFF}
+[data-theme=dark] .tap-prompt,[data-theme=dark] .game-section[data-mode=paused] .tap-prompt,[data-theme=dark] .game-section[data-mode=over] .tap-prompt{background:#1B1629F5;border-color:#493C62;box-shadow:0 12px 40px #0004}
+[data-theme=dark] .dpad button{background:#30263F;border-color:#574575;color:#D8CFFF;box-shadow:0 2px 0 #0004}
+[data-theme=dark] .hole{background:#574575;border-color:#332744;box-shadow:0 4px 0 #130E20}
+[data-theme=dark] .hole small{color:#FFF}
+[data-theme=dark] .memory-tile{background:#654ACC;box-shadow:0 3px 0 #39286F;color:#FFF}
+[data-theme=dark] .memory-tile.revealed{background:#D8CFFF;color:#25163F}
+[data-theme=dark] .memory-tile.matched{background:#3B2F54;color:#D8CFFF;box-shadow:0 3px 0 #211A33}
+[data-theme=dark] #toast{background:#DED6F5;color:#171222}
+[data-theme=dark] :focus-visible{outline-color:#B9AAFF}
+@media(max-width:650px){.top-controls{gap:0}.top-controls .icon-button{width:36px}.theme-toggle{height:36px;padding:0 10px;font-size:9px;gap:5px}}
+/* Inline grid geometry keeps every tile square and every mole hole circular. */
+.board{align-items:stretch;justify-items:stretch}.hole,.memory-tile{width:100%;height:100%;padding:0;min-width:0}
+
+/* Safari also highlights clickable containers/canvases, not only buttons. */
+#feed,#feed *{-webkit-tap-highlight-color:transparent}
+:root[data-input=pointer] #feed:focus,:root[data-input=pointer] #feed :focus{outline:none}
+
+/* Round choices live outside the tappable game area. */
+.round-options{display:flex;align-items:center;gap:10px;font:8px var(--mono);color:var(--muted);pointer-events:auto}
+.round-options-label{letter-spacing:1px;flex-shrink:0}
+.round-picker{display:grid;grid-template-columns:1fr 1fr 1.45fr;gap:4px;flex:1;padding:4px;border:1px solid var(--line);border-radius:15px;background:var(--soft)}
+.round-choice{min-width:0;min-height:36px;padding:6px 8px;border-radius:11px;background:transparent;color:var(--muted);font-size:11px;font-weight:500;white-space:nowrap;transition:background .15s,color .15s,box-shadow .15s}
+.round-choice[aria-pressed=true]{background:var(--purple);color:#FFF;box-shadow:0 3px 8px #6e54ff30}
+.round-choice:hover:not(:disabled):not([aria-pressed=true]){background:var(--lavender);color:var(--ink)}
+.game-section[data-id=mole]:not(.is-started) .game-content{height:176px}
+.game-section[data-id=mole]:not(.is-started) .playfield{bottom:176px}
+.game-section[data-id=mole].is-started .game-content{height:140px}
+.game-section[data-id=mole].is-started .playfield{bottom:140px}
+.end-button{min-height:40px;padding:0 10px;border-radius:20px;background:var(--white);font:9px var(--mono);color:var(--ink)}
+.game-section[data-mode=over] .playfield{cursor:default}
+.game-section[data-mode=over] .tap-prompt{z-index:6;pointer-events:auto;gap:8px}
+.replay-button{min-height:46px;min-width:156px;display:flex;align-items:center;justify-content:center;gap:14px;margin-top:10px;padding:12px 22px;border-radius:14px;background:var(--purple);color:#FFF;font-size:13px;font-weight:700;box-shadow:0 6px 20px #6e54ff30;pointer-events:auto}
+.replay-button span{font-size:18px;font-weight:400}
+.game-section[data-mode=over] .tap-prompt small{display:block}
+.scroll-hint.locked:before{content:'↕'}
+/* Focused controls must not scroll the transformed card stack internally. */
+#feed,.game-section{overflow:clip}
+
+/* Results overlay the existing arena; replay never resizes it. Keep the footer
+   action's space reserved, and keep Mole's picker in place throughout a round. */
+.game-section[data-mode=over] .game-content .play-button{visibility:hidden;pointer-events:none}
+.round-choice:disabled{opacity:1;cursor:default}
+.round-choice:disabled:not([aria-pressed=true]){opacity:.5}
