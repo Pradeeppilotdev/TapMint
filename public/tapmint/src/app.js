@@ -9,6 +9,7 @@ import { TapIntent, playAreaAction } from './input.js';
 import { frameDelta, roundClock } from './timing.js';
 import { gridLayout } from './layout.js';
 import { initTheme } from './theme.js';
+import { initWallet } from './wallet.js';
 
 const games = [
   { id:'flap', name:'Pocket Flap', emoji:'🐤', category:'ONE TAP. INSTANT OBSESSION.', description:'Find your rhythm. Fly a little further.', tags:['One tap','Reflex','Endless'], duration:Infinity, unit:'gates', instruction:'Tap the game or press Space to flap.' },
@@ -59,7 +60,7 @@ function syncSaved(){ $('#saved-count').textContent=saved.size;document.querySel
 function toggleSaved(id){if(filter==='saved'&&!canLeaveGame())return;if(saved.has(id))saved.delete(id);else saved.add(id);write('saved',[...saved]);syncSaved();if(filter==='saved')renderFeed();}
 async function share(game){
   if(location.protocol==='file:'){toast('Share links become available when TapMint is hosted.');return;}
-  const url=new URL(location.href);url.search='';url.searchParams.set('game',game.id);
+  const url=new URL('/',location.origin);url.search='';url.searchParams.set('game',game.id);
   if(navigator.share){try{await navigator.share({title:`${game.name} on TapMint`,text:'Your next little play break.',url:url.href});return;}catch(error){if(error.name==='AbortError')return;}}
   try{await navigator.clipboard.writeText(url.href);toast('Game link copied. Send a little play break.');}
   catch{openModal('Share this game',`<p>Copy this direct link:</p><input aria-label="Game link" readonly class="share-link" />`);$('#modal-body input').value=url.href;$('#modal-body input').select();}
@@ -67,97 +68,14 @@ async function share(game){
 function openModal(title,content){active?.pause();$('#modal-title').textContent=title;$('#modal-body').innerHTML=content;$('#modal').showModal();}
 $('#close-modal').onclick=()=>$('#modal').close();
 $('#modal').addEventListener('click',event=>{if(event.target===$('#modal')){const r=event.target.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)event.target.close();}});
-$('#help').onclick=()=>{openModal('A little play break.',`<p>Tap <strong>anywhere in the game area</strong> to start. <strong>Privy wallet required</strong> — no guest play.</p><p>When a round ends, your TapMint score is saved with your wallet and the <strong>treasury sends reward tokens automatically</strong> (no buy / no claim). Ratio is configured server-side (default 10 score = 1 token).</p><p>Swipe or use <kbd>J</kbd>/<kbd>K</kbd>. Snake: arrows. <kbd>P</kbd> pause · <kbd>R</kbd> retry.</p><button class="dialog-action" id="share-current">Share this game ↗</button>`);$('#share-current').disabled=!active;$('#share-current').onclick=()=>{if(active){$('#modal').close();share(active.game);}};};
-
-/* ---- Privy / nad.fun bridge (parent shell) ---- */
-let marketsByGame = {};
-let parentWallet = null;
-
-async function loadMarkets() {
-  try {
-    const res = await fetch('/tapmint/markets.json', { cache: 'no-store' });
-    const list = await res.json();
-    marketsByGame = Object.fromEntries((Array.isArray(list) ? list : []).map(m => [m.gameId, m]));
-    document.querySelectorAll('.token-slot').forEach(slot => paintTokenBadge(slot.closest('.game-section') || slot.parentElement, slot.dataset.game));
-  } catch {
-    marketsByGame = {};
-  }
-}
-
-function shortenAddr(addr) {
-  return addr ? `${addr.slice(0, 6)}…${addr.slice(-4)}` : '';
-}
-
-function paintTokenBadge(root, gameId) {
-  if (!root) return;
-  const slot = root.querySelector?.('.token-slot') || root;
-  if (!slot?.classList?.contains('token-slot') && !slot.querySelector) return;
-  const target = slot.classList?.contains('token-slot') ? slot : slot.querySelector('.token-slot');
-  if (!target) return;
-  const market = marketsByGame[gameId];
-  if (!market) {
-    target.innerHTML = '<div class="token-badge"><div><strong>Market pending</strong><span>Token not linked yet</span></div></div>';
-    return;
-  }
-  const short = shortenAddr(market.tokenAddress);
-  target.innerHTML = `<div class="token-badge"><img src="${market.imageUri}" alt="$${market.symbol}" /><div><strong>$${market.symbol} · reward token</strong><span>${short}</span></div></div>`;
-}
-
-let parentPrivyId = null;
-let parentEmail = null;
-
-function reportScore(gameId, score) {
-  const payload = { type: 'tapmint:score', gameId, score, wallet: parentWallet, privyUserId: parentPrivyId };
-  window.parent?.postMessage(payload, '*');
-  if (!parentWallet) {
-    toast('Wallet missing — cannot pay rewards');
-    return;
-  }
-  if (score <= 0) return;
-
-  fetch('/api/rewards/game-end', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      wallet: parentWallet,
-      gameId,
-      score,
-      privyUserId: parentPrivyId,
-      email: parentEmail,
-    }),
-  }).then(async (res) => {
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      toast(data.error || 'Reward failed');
-      return;
-    }
-    if (data.paid) toast(data.message || `+${data.tokens} $${data.symbol}`);
-    else toast(data.message || `Score ${score} saved · below token threshold`);
-  }).catch(() => toast('Reward request failed'));
-}
-
-window.addEventListener('message', (event) => {
-  const data = event.data;
-  if (!data || typeof data !== 'object') return;
-  if (data.type === 'tapmint:auth' && typeof data.wallet === 'string') {
-    parentWallet = data.wallet;
-    parentPrivyId = data.privyUserId || null;
-    parentEmail = data.email || null;
-    const chip = $('#wallet-chip');
-    if (chip) chip.textContent = shortenAddr(data.wallet);
-  }
-});
-
-window.parent?.postMessage({ type: 'tapmint:ready' }, '*');
-loadMarkets();
+$('#help').onclick=()=>{openModal('A little play break.',`<p>Tap <strong>anywhere in the game area</strong> to start, or use the Play button. A swipe only browses; it never starts a game. Flap and Snake run until a collision. Memory has no time limit. Mole Patrol offers 30-second, 60-second, or endless play. Finished results stay visible until you choose Play again.</p><p>Swipe vertically or scroll to move exactly one game at a time. Use <kbd>J</kbd> / <kbd>K</kbd> on desktop. Arrow keys steer Snake; <kbd>P</kbd> pauses and <kbd>R</kbd> retries.</p><p><strong>While you play, use a long vertical swipe to switch games.</strong> Short swipes are ignored. On desktop, use a longer scroll. Switching pauses your current round; Pause also lets you browse normally. Tap the game area or Resume to continue a paused round.</p><p>Use <strong>Sound off</strong> to enable game sounds; a short tone confirms audio is ready. Use the heart to save a game. Best scores and saved games stay in this browser when storage is available. Switching browser tabs pauses your round.</p><p>Your Privy wallet in the top right holds your rewards. Open it to view earned tokens, round history, and nad.fun links. Rewards are currently on Monad testnet.</p><button class="dialog-action" id="share-current">Share this game ↗</button>`);$('#share-current').disabled=!active;$('#share-current').onclick=()=>{if(active){$('#modal').close();share(active.game);}};};
 $('#nav-best').onclick=()=>openModal('Your personal bests',games.flatMap(g=>g.id==='mole'?[30,60,'endless'].map(length=>({ ...g, id:`mole:${length}`,name:`${g.name} · ${length==='endless'?'Endless':`${length}s`}` })):[g]).map(g=>`<div class="score-row"><span>${g.emoji} ${g.name}</span><strong>${bestFor(g.id)} ${g.unit}</strong></div>`).join('')+'<p>Personal scores on this device. No global leaderboard yet.</p>');
 
 class GameSession{
   constructor(game){
     this.game=game;this.duration=game.duration;this.mode='ready';this.elapsed=0;this.raf=0;this.last=0;this.accumulator=0;this.active=false;this.state=this.createState();
     this.el=document.createElement('article');this.el.className='game-section';this.el.dataset.id=game.id;this.el.setAttribute('aria-label',game.name);
-    this.el.innerHTML=`<div class="playfield" role="group" aria-label="${game.name} play area"><div class="game-visual"><canvas aria-label="${game.name} game area" role="img"></canvas></div><div class="tap-prompt"><span class="tap-symbol">↗</span><strong>Tap anywhere to play</strong><small>${game.instruction}</small><button class="replay-button" hidden>Play again <span aria-hidden="true">↻</span></button></div></div><div class="timer-bar"></div><div class="game-header"><span class="game-chip">${String(games.indexOf(game)+1).padStart(2,'0')} / QUICK PLAY</span><div class="round-tools"><button class="sound-button" aria-label="Enable sound" aria-pressed="false">Sound off</button><button class="end-button" hidden>Finish</button><span class="round-length">${Number.isFinite(this.duration)?`${this.duration}s`:'No limit'}</span><button class="icon-button pause-button" aria-label="Pause game" hidden>Ⅱ</button></div></div><div class="hud"><span class="hud-score"><small>SCORE</small><span class="score-value">00</span></span><span class="hud-time">${Number.isFinite(this.duration)?`${this.duration}s`:'No limit'}</span></div><div class="game-content"><div class="title-row"><div><div class="game-meta">${game.category}</div><h2>${game.name}</h2></div><button class="save-button" data-game="${game.id}" aria-label="Save ${game.name}" aria-pressed="false">${heartIcon}</button></div><p class="description">${game.description}</p><div class="token-slot" data-game="${game.id}"></div><p class="round-status" role="status" aria-live="polite"></p><div class="play-row"><span class="best-line">Best <b class="best-value">${bestFor(game.id)}</b> ${game.unit}</span><button class="play-button">Play now ↗</button></div></div>`;
-    queueMicrotask(()=>paintTokenBadge(this.el, game.id));
+    this.el.innerHTML=`<div class="playfield" role="group" aria-label="${game.name} play area"><div class="game-visual"><canvas aria-label="${game.name} game area" role="img"></canvas></div><div class="tap-prompt"><span class="tap-symbol">↗</span><strong>Tap anywhere to play</strong><small>${game.instruction}</small><button class="replay-button" hidden>Play again <span aria-hidden="true">↻</span></button></div></div><div class="timer-bar"></div><div class="game-header"><span class="game-chip">${String(games.indexOf(game)+1).padStart(2,'0')} / QUICK PLAY</span><div class="round-tools"><button class="sound-button" aria-label="Enable sound" aria-pressed="false">Sound off</button><button class="end-button" hidden>Finish</button><span class="round-length">${Number.isFinite(this.duration)?`${this.duration}s`:'No limit'}</span><button class="icon-button pause-button" aria-label="Pause game" hidden>Ⅱ</button></div></div><div class="hud"><span class="hud-score"><small>SCORE</small><span class="score-value">00</span></span><span class="hud-time">${Number.isFinite(this.duration)?`${this.duration}s`:'No limit'}</span></div><div class="game-content"><div class="title-row"><div><div class="game-meta">${game.category}</div><h2>${game.name}</h2></div><button class="save-button" data-game="${game.id}" aria-label="Save ${game.name}" aria-pressed="false">${heartIcon}</button></div><p class="description">${game.description}</p><p class="round-status" role="status" aria-live="polite"></p><div class="play-row"><span class="best-line">Best <b class="best-value">${bestFor(game.id)}</b> ${game.unit}</span><button class="play-button">Play now ↗</button></div></div>`;
     this.field=$('.playfield',this.el);
     this.canvas=$('canvas',this.el);
     this.resizeObserver=new ResizeObserver(()=>this.draw());this.resizeObserver.observe(this.field);
@@ -268,7 +186,7 @@ this.elapsed=0;this.accumulator=0;this.mode='running';this.el.classList.add('is-
     if(this.game.id==='mole')this.buttons.forEach((b,i)=>{const up=this.mode==='ready'?i===4:i===this.state.active; b.classList.toggle('up',up);b.disabled=false;b.setAttribute('aria-label',`Hole ${i+1}, ${up?'mole':'empty'}`);});
     if(this.game.id==='memory')this.buttons.forEach((b,i)=>{const matched=this.state.matched.includes(i),open=matched||this.state.open.includes(i);b.classList.toggle('revealed',open);b.classList.toggle('matched',matched);b.textContent=open?icons[this.state.deck[i]]:'✦';b.disabled=matched&&this.mode!=='over';b.setAttribute('aria-label',`Card ${i+1}, ${open?symbolNames[this.state.deck[i]]:'face down'}${matched?', matched':''}`);});
   }
-  finish(message){this.mode='over';this.stopFrame();this.el.classList.remove('is-playing');this.update();this.status.textContent=`${message} ${this.state.score} ${this.game.unit}.`;this.playButton.textContent='Play again ↻';$('.pause-button',this.el).disabled=true;metric(this.game.id,'completions');syncNavigation();this.draw();sound(260);reportScore(this.game.id,this.state.score);}
+  finish(message){this.mode='over';this.stopFrame();this.el.classList.remove('is-playing');this.update();this.status.textContent=`${message} ${this.state.score} ${this.game.unit}.`;this.playButton.textContent='Play again ↻';$('.pause-button',this.el).disabled=true;metric(this.game.id,'completions');syncNavigation();this.draw();sound(260);window.parent.postMessage({type:'tapmint:score',gameId:this.game.id,score:this.state.score},location.origin);}
   setActive(value){this.active=value;if(!value)this.pause();this.el.inert=!value;this.el.setAttribute('aria-hidden',String(!value));this.draw();}
   destroy(){this.stopFrame();this.resizeObserver.disconnect();this.inputAbort.abort();}
 }
@@ -305,7 +223,7 @@ function selectSession(session,updateURL=true){
   const i=sessions.indexOf(session);$('.feed-count').innerHTML=`${String(i+1).padStart(2,'0')} <span>/ ${String(sessions.length).padStart(2,'0')}</span>`;
   syncNavigation();
   document.querySelectorAll('.game-list-item').forEach(b=>{b.classList.toggle('current',b.dataset.game===session.game.id);if(b.dataset.game===session.game.id)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');});
-  if(updateURL){const url=new URL(location.href);url.searchParams.set('game',session.game.id);history.replaceState(null,'',url);}
+  if(updateURL){const url=new URL(location.href);url.searchParams.set('game',session.game.id);history.replaceState(null,'',url);if(window.parent!==window)window.parent.postMessage({type:'tapmint:game',gameId:session.game.id},location.origin);}
 }
 function navigate(delta){if(!canLeaveGame())return;const target=sessions[sessions.indexOf(active)+delta];if(target)scrollToSession(target);}
 function scrollToSession(target){if(target&&canLeaveGame())pager.goTo(sessions.indexOf(target));}
@@ -324,12 +242,12 @@ $('#previous').onclick=()=>navigate(-1);$('#next').onclick=()=>navigate(1);
 $('#game-list').innerHTML=games.map((g,i)=>`<button class="game-list-item" data-game="${g.id}"><span class="game-thumbnail" aria-hidden="true">${String(i+1).padStart(2,'0')}</span><span><strong>${g.name}</strong><small>${g.tags[1]} / ${g.id==='mole'?'Choose a round':g.id==='memory'?'No time limit':'Endless'}</small></span></button>`).join('');
 $('#game-list').addEventListener('click',event=>{const button=event.target.closest('[data-game]');if(!button)return;if(filter==='saved')setFilter('all',button.dataset.game);else scrollToSession(sessions.find(s=>s.game.id===button.dataset.game));});
 document.addEventListener('keydown',event=>{
-  if(event.altKey||event.metaKey||event.ctrlKey||event.target.closest('input,textarea,select')||$('#modal').open)return;
+  if(event.altKey||event.metaKey||event.ctrlKey||event.target.closest('input,textarea,select')||document.querySelector('dialog[open]'))return;
   const key=event.key.toLowerCase();
   if(['j','k','pagedown','pageup'].includes(key)){event.preventDefault();if(!event.repeat)navigate(key==='j'||key==='pagedown'?1:-1);return;}
   if((event.key==='ArrowDown'||event.key==='ArrowUp')&&active?.mode!=='running'&&!event.target.closest('button')){event.preventDefault();if(!event.repeat)navigate(event.key==='ArrowDown'?1:-1);return;}
   if(!active)return;
-  if(key==='p'){event.preventDefault();active.mode==='running'?active.pause():active.resume();}
+  if(key==='p'){event.preventDefault();if(active.mode==='running')active.pause();else active.resume();}
   if(key==='r'&&!event.repeat){event.preventDefault();active.start();}
   if(event.key===' '&&!event.target.closest('button,a')){event.preventDefault();if(active.mode==='running'&&active.game.id==='flap'){Flap.flap(active.state);sound(400);}else if(!event.repeat&&playAreaAction(active.mode)&&active.mode!=='running')active.primary();}
   if(active.mode==='running'&&active.game.id==='snake'){const direction={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'}[event.key];if(direction){event.preventDefault();Snake.turn(active.state,direction);}}
@@ -342,3 +260,5 @@ renderFeed(new URLSearchParams(location.search).get('game'));
 syncSound();
 
 initTheme(()=>sessions.forEach(session=>session.draw()));
+
+initWallet({pause:()=>active?.pause(),toast});

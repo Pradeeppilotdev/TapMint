@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { authenticatedPlayer, WalletAuthError } from "@/lib/privy-auth";
 import { isAddress } from "viem";
 import { GAMES } from "@/lib/games";
 import { settleGameEnd, type GameEndInput } from "@/lib/rewards";
@@ -6,6 +7,7 @@ import type { GameId } from "@/lib/supabase";
 
 export async function POST(req: NextRequest) {
   try {
+    const playerId = await authenticatedPlayer(req);
     const body = (await req.json()) as {
       wallet?: string;
       gameId?: string;
@@ -14,7 +16,7 @@ export async function POST(req: NextRequest) {
       email?: string;
     };
 
-    const { wallet, gameId, score, privyUserId, email } = body;
+    const { wallet, gameId, score, email } = body;
 
     if (!wallet || !isAddress(wallet)) {
       return NextResponse.json({ error: "valid wallet required" }, { status: 400 });
@@ -30,12 +32,13 @@ export async function POST(req: NextRequest) {
       wallet,
       gameId: gameId as GameId,
       score: Math.floor(score),
-      privyUserId: privyUserId || null,
+      privyUserId: playerId,
       email: email || null,
     } satisfies GameEndInput);
 
     return NextResponse.json({ ok: true, ...result });
   } catch (err) {
+    if (err instanceof WalletAuthError) return NextResponse.json({ error: err.message }, { status: err.status });
     const message = err instanceof Error ? err.message : "game-end failed";
     return NextResponse.json({ error: message }, { status: 500 });
   }

@@ -1,44 +1,16 @@
-.token-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  margin: 0.75rem 0 0;
-  padding: 0.55rem 0.7rem;
-  border-radius: 0.85rem;
-  border: 1px solid color-mix(in srgb, var(--accent, #6E54FF) 35%, transparent);
-  background: color-mix(in srgb, var(--accent, #6E54FF) 12%, transparent);
-  font-size: 0.78rem;
-}
-
-.token-badge img {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  object-fit: cover;
-}
-
-.token-badge strong {
-  display: block;
-  font-size: 0.82rem;
-}
-
-.token-badge span {
-  opacity: 0.72;
-  font-family: ui-monospace, monospace;
-  font-size: 0.68rem;
-}
-
-.token-badge a {
-  margin-left: auto;
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  opacity: 0.85;
-}
-
-#wallet-chip {
-  display: block;
-  margin-top: 0.45rem;
-  font-family: ui-monospace, monospace;
-  word-break: break-all;
-}
+/* Wallet controls use the original arcade palette and never change card geometry. */
+.wallet-button{display:flex;align-items:center;justify-content:center;gap:9px;height:40px;padding:0 15px;border:1px solid var(--line);border-radius:24px;background:var(--ink);color:var(--white);font:11px var(--mono);white-space:nowrap}
+.wallet-button svg,.wallet-avatar svg,.wallet-empty-icon svg{width:18px;height:18px;flex:none}.wallet-button:focus-visible{outline-offset:3px}
+[data-theme=dark] .wallet-button{background:var(--lavender);color:var(--accent);border-color:var(--line)}
+#wallet-dialog{padding:0;width:min(480px,calc(100% - 32px));max-width:480px;max-height:calc(100dvh - 32px);background:var(--white);overflow:hidden;box-shadow:0 24px 100px #0e091c30}
+#wallet-dialog[open]{display:flex;flex-direction:column}.wallet-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:26px 26px 22px;border-bottom:1px solid var(--line);flex:none}.wallet-heading h2{font-size:30px;letter-spacing:-1.2px;margin-top:8px}.wallet-overline{font:9px var(--mono);letter-spacing:1px;color:var(--muted)}.wallet-heading .icon-button{background:var(--soft)}
+#wallet-content{padding:22px 26px;overflow:auto;overscroll-behavior:contain;min-height:0;font-size:13px;scrollbar-width:thin;scrollbar-color:var(--lavender) transparent}.wallet-identity{display:flex;align-items:center;gap:12px}.wallet-avatar{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:var(--lavender);color:var(--purple);flex:none}.wallet-address{display:block;background:transparent;padding:5px 0 0;text-align:left;font:12px var(--mono);overflow-wrap:anywhere}.network-pill{margin-left:auto;font-size:9px;white-space:nowrap;display:flex;align-items:center;gap:5px;color:var(--muted)}.network-pill i{width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.wallet-summary{display:flex;align-items:center;gap:26px;margin:24px 0;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.wallet-summary>div{display:flex;flex-direction:column;gap:5px}.wallet-summary strong{font-size:26px;letter-spacing:-1px}.wallet-summary span{font-size:10px;color:var(--muted)}.wallet-summary>a{margin-left:auto}.wallet-text-link{font-size:10px;color:var(--purple);white-space:nowrap}.wallet-text-link:hover{text-decoration:underline;text-underline-offset:3px}[data-theme=dark] .wallet-text-link{color:var(--accent)}
+.wallet-tabs{display:flex;align-items:center;gap:4px;padding:4px;background:var(--soft);border-radius:14px;margin-bottom:18px}.wallet-tabs [role=tab]{flex:1;min-height:38px;border-radius:10px;background:transparent;color:var(--muted);font-size:12px}.wallet-tabs [aria-selected=true]{background:var(--white);color:var(--ink);box-shadow:0 2px 6px #0e091c08;font-weight:700}.wallet-refresh{width:36px;height:36px;border-radius:10px;background:transparent;font-size:22px;color:var(--muted)}
+.wallet-caption{font-size:10px;line-height:1.6;color:var(--muted);margin:12px 0}.wallet-token{display:flex;align-items:center;gap:12px;padding:16px 0;border-bottom:1px solid var(--line)}.token-avatar{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--lavender);color:var(--purple);font-size:17px;font-weight:700;flex:none}.token-mole{background:#E9DFFF;color:#7756AE}.token-snake{background:#E1F2DE;color:#497143}.token-memory{background:#FFE5ED;color:#A04E70}.token-name{min-width:0;flex:1;display:flex;flex-direction:column;gap:5px}.token-name strong{font-size:12px}.token-name span{font-size:10px;color:var(--muted)}.token-earned{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:7px;min-width:0;max-width:55%;overflow-wrap:anywhere}.token-earned strong{font:13px var(--mono)}.token-earned small{font-size:9px;color:var(--muted)}
+.history-round{padding:17px 0;border-bottom:1px solid var(--line)}.history-top,.history-bottom{display:flex;justify-content:space-between;align-items:center;gap:8px}.history-top strong{font-size:12px}.history-amount{font:12px var(--mono);overflow-wrap:anywhere;text-align:right;max-width:50%}.history-amount small{font-size:9px;color:var(--muted)}.history-detail{font-size:10px;color:var(--muted);margin:7px 0 12px;line-height:1.6}.payout-status{display:flex;align-items:center;gap:6px;font-size:9px;color:var(--muted)}.payout-status i{width:5px;height:5px;border-radius:50%;background:currentColor}.payout-status.paid{color:#36805D}.payout-status.pending{color:#9B731A}.payout-status.failed{color:#B44864}[data-theme=dark] .payout-status.paid{color:#91D5AD}[data-theme=dark] .payout-status.pending{color:#E1C47F}[data-theme=dark] .payout-status.failed{color:#FF9EB6}
+.wallet-empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:30px 6px;gap:14px}.wallet-empty-icon{display:grid;place-items:center;width:60px;height:60px;background:var(--lavender);color:var(--purple);border-radius:20px;margin-bottom:5px}.wallet-empty-icon svg{width:26px;height:26px}.wallet-empty h3{font-size:21px;letter-spacing:-.7px}.wallet-empty p{font-size:12px;color:var(--muted);line-height:1.8;max-width:320px}.wallet-empty.compact{padding:26px 8px}.wallet-notice{padding:12px;background:var(--soft);border-radius:12px}.wallet-empty-note{padding:14px;background:var(--soft);border-radius:12px;margin-top:18px;font-size:11px;line-height:1.7;color:var(--muted)}
+.wallet-footer{display:flex;justify-content:space-between;align-items:center;padding-top:22px;margin-top:8px;color:var(--muted);font-size:10px}.wallet-footer button{background:transparent;color:var(--muted);padding:10px 0 10px 16px;font-size:11px}.wallet-load-more{width:100%;margin-top:16px;background:var(--soft);padding:13px;border-radius:12px;font-size:11px}.wallet-error{border:1px solid var(--line);background:var(--soft);padding:14px;border-radius:12px;font-size:11px;line-height:1.7;margin-bottom:14px}.wallet-error button{color:var(--purple);background:transparent;padding:4px 0;text-decoration:underline}.wallet-loading{display:flex;justify-content:center;align-items:center;gap:10px;padding:40px 0;color:var(--muted);font-size:12px}.wallet-loading span{width:14px;height:14px;border:2px solid var(--lavender);border-top-color:var(--purple);border-radius:50%;animation:wallet-spin .8s linear infinite}@keyframes wallet-spin{to{transform:rotate(360deg)}}
+@media(max-width:650px){.wallet-button{height:36px;gap:6px;padding:0 10px;font-size:9px}.wallet-button svg{width:15px;height:15px}.top-controls .theme-toggle{width:36px;padding:0}.top-controls .theme-toggle span{display:none}.top-controls{gap:3px}.top-controls #help{display:none}.wallet-heading{padding:22px 20px 18px}#wallet-content{padding:20px}.wallet-heading h2{font-size:28px}}
+@media(max-width:380px){.mobile-brand{font-size:21px;gap:7px}.mobile-brand .brand-mark{width:27px;height:27px}.brand-slogan{font-size:7px}.topbar{padding-left:12px;padding-right:12px}.wallet-summary{gap:18px}.wallet-summary>a{font-size:9px}.network-pill{font-size:8px;gap:3px}.wallet-address{font-size:11px}#wallet-content{padding:17px}.wallet-heading{padding:20px 17px 16px}}
+@media(prefers-reduced-motion:reduce){.wallet-loading span{animation:none}}

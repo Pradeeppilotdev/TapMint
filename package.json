@@ -1,5 +1,5 @@
 {
-  "name": "devcon",
+  "name": "tapmint",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,7 +11,8 @@
     "patch-nadfun": "node scripts/patch-nadfun-api.mjs",
     "postinstall": "node scripts/patch-nadfun-api.mjs",
     "create-markets": "tsx scripts/create-markets.ts",
-    "sync-markets": "node scripts/sync-tapmint-markets.mjs"
+    "sync-markets": "node scripts/sync-tapmint-markets.mjs",
+    "test": "node --import tsx --test tests/*.test.js tests/*.test.ts"
   },
   "dependencies": {
     "@nadfun/sdk": "^0.4.3",
@@ -22,7 +23,8 @@
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "sharp": "^0.35.5",
-    "viem": "^2.57.16"
+    "viem": "^2.57.16",
+    "jose": "^4.15.9"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
@@ -34,5 +36,6 @@
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5"
-  }
+  },
+  "type": "module"
 }
